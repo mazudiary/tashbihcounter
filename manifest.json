@@ -2,7 +2,9 @@
   "name": "📿 Tasbih Counter - Digital Islamic Prayer Beads",
   "short_name": "Tasbih Counter",
   "description": "A beautiful, modern digital tasbih counter for Muslims. Track your dhikr and spiritual journey with cloud sync and offline support.",
-  "start_url": "/index.html",
+  "id": "index.html",
+  "start_url": "index.html",
+  "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#f0fdf4",
@@ -10,7 +12,6 @@
   "categories": ["lifestyle", "productivity", "utilities"],
   "lang": "en",
   "dir": "ltr",
-  "scope": "/",
   "icons": [
     {
       "src": "icon-192.svg",
