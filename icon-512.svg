@@ -1,0 +1,33 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#16a34a"/>
+      <stop offset="100%" style="stop-color:#22c55e"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#eab308"/>
+      <stop offset="100%" style="stop-color:#f59e0b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" rx="64" fill="url(#bg)"/>
+
+  <!-- Tasbih Beads -->
+  <circle cx="256" cy="256" r="180" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="8"/>
+  <circle cx="256" cy="256" r="130" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="6"/>
+  <circle cx="256" cy="256" r="80" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="4"/>
+
+  <!-- Center Counter -->
+  <circle cx="256" cy="256" r="32" fill="url(#accent)"/>
+  <text x="256" y="268" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="24" font-weight="bold">33</text>
+
+  <!-- Islamic Star -->
+  <g transform="translate(256,256)">
+    <path d="M0,-20 L5,-8 L20,0 L5,8 L0,20 L-5,8 L-20,0 L-5,-8 Z" fill="rgba(255,255,255,0.8)"/>
+  </g>
+
+  <!-- App Title -->
+  <text x="256" y="420" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="32" font-weight="bold">Tasbih</text>
+  <text x="256" y="450" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="20" font-weight="300">Counter</text>
+</svg>

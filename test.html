@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tasbih Counter - Test Suite</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+      .test-section {
+        background: white;
+        margin: 20px 0;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .test-button {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        margin: 5px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      .test-button:hover {
+        background: #0056b3;
+      }
+      .success {
+        color: #28a745;
+        font-weight: bold;
+      }
+      .error {
+        color: #dc3545;
+        font-weight: bold;
+      }
+      .info {
+        color: #17a2b8;
+      }
+      #results {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        margin-top: 10px;
+        max-height: 400px;
+        overflow-y: auto;
+      }
+      input,
+      textarea {
+        width: 100%;
+        padding: 8px;
+        margin: 5px 0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      .status-indicator {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-right: 8px;
+      }
+      .online {
+        background-color: #28a745;
+      }
+      .offline {
+        background-color: #dc3545;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🧪 Tasbih Counter Test Suite</h1>
+
+    <!-- Network Status -->
+    <div class="test-section">
+      <h2>🌐 Network Status</h2>
+      <p>
+        <span id="networkStatus" class="status-indicator"></span>
+        <span id="networkText">Checking...</span>
+      </p>
+    </div>
+
+    <!-- Apps Script URL Test -->
+    <div class="test-section">
+      <h2>🔗 Google Apps Script Connection Test</h2>
+      <p>Current Script URL: <code id="currentUrl">Loading...</code></p>
+      <input
+        type="text"
+        id="testUrl"
+        placeholder="Enter your Google Apps Script URL here to test"
+      />
+      <button class="test-button" onclick="testScriptConnection()">
+        Test Connection
+      </button>
+      <button class="test-button" onclick="testPing()">Ping Script</button>
+      <div id="connectionResults"></div>
+    </div>
+
+    <!-- Local Storage Test -->
+    <div class="test-section">
+      <h2>💾 Local Storage Test</h2>
+      <button class="test-button" onclick="testLocalStorage()">
+        Test Local Storage
+      </button>
+      <button class="test-button" onclick="clearTestData()">
+        Clear Test Data
+      </button>
+      <div id="storageResults"></div>
+    </div>
+
+    <!-- API Endpoints Test -->
+    <div class="test-section">
+      <h2>🔌 API Endpoints Test</h2>
+      <div>
+        <h3>Test User Registration</h3>
+        <input
+          type="text"
+          id="testUserId"
+          placeholder="Test User ID"
+          value="testuser123"
+        />
+        <input
+          type="text"
+          id="testUserName"
+          placeholder="Test User Name"
+          value="Test User"
+        />
+        <input
+          type="password"
+          id="testPassword"
+          placeholder="Test Password"
+          value="testpass123"
+        />
+        <button class="test-button" onclick="testCreateUser()">
+          Test Register
+        </button>
+      </div>
+
+      <div>
+        <h3>Test User Login</h3>
+        <button class="test-button" onclick="testLogin()">Test Login</button>
+      </div>
+
+      <div>
+        <h3>Test Save Tasbih</h3>
+        <textarea id="testData" placeholder="Test data JSON">
+{"sessionId": "test-session", "counts": {"SubhanAllah": 33, "Alhamdulillah": 33}}</textarea
+        >
+        <button class="test-button" onclick="testSaveTasbih()">
+          Test Save
+        </button>
+      </div>
+
+      <div>
+        <h3>Test Get Progress</h3>
+        <button class="test-button" onclick="testGetProgress()">
+          Test Get Progress
+        </button>
+      </div>
+    </div>
+
+    <!-- Google Sheets Setup Guide -->
+    <div class="test-section">
+      <h2>📊 Google Sheets Setup Verification</h2>
+      <div
+        style="
+          background: #fff3cd;
+          padding: 15px;
+          border-radius: 5px;
+          margin-bottom: 15px;
+          border-left: 4px solid #ffc107;
+        "
+      >
+        <h3>🔧 Required Setup for Your Apps Script:</h3>
+        <ol>
+          <li><strong>Create/Open your Google Sheet</strong></li>
+          <li>
+            <strong>Create two sheets with these exact names:</strong>
+            <ul>
+              <li>
+                <code>user</code> - with headers: UserID | Name | Password
+              </li>
+              <li>
+                <code>tashbih_data</code> - with headers: Timestamp | UserID |
+                Name | TasbihName | Count | SessionID
+              </li>
+            </ul>
+          </li>
+          <li>
+            <strong>In Apps Script Editor:</strong>
+            <ul>
+              <li>Go to Extensions → Apps Script</li>
+              <li>Paste your provided code</li>
+              <li>Save the project</li>
+              <li>Click "Deploy" → "New deployment"</li>
+              <li>Type: Web app</li>
+              <li>Execute as: Me</li>
+              <li>Who has access: Anyone</li>
+              <li>Deploy and copy the URL</li>
+            </ul>
+          </li>
+          <li>
+            <strong>Test authorization:</strong> Run any function once to
+            authorize sheets access
+          </li>
+        </ol>
+      </div>
+
+      <button class="test-button" onclick="testSheetsSetup()">
+        🔍 Test Sheets Setup
+      </button>
+      <button
+        class="test-button"
+        onclick="generateSheetTemplate()"
+        style="background: #28a745"
+      >
+        📋 Generate Sheet Template
+      </button>
+      <button
+        class="test-button"
+        onclick="diagnoseSheetsError()"
+        style="background: #dc3545"
+      >
+        🩺 Diagnose Sheets Error
+      </button>
+      <div id="sheetsResults"></div>
+    </div>
+
+    <!-- Service Worker Test -->
+    <div class="test-section">
+      <h2>⚙️ Service Worker Test</h2>
+      <button class="test-button" onclick="testServiceWorker()">
+        Test Service Worker
+      </button>
+      <div id="swResults"></div>
+    </div>
+
+    <!-- Manifest Test -->
+    <div class="test-section">
+      <h2>📱 PWA Manifest Test</h2>
+      <button class="test-button" onclick="testManifest()">
+        Test Manifest
+      </button>
+      <div id="manifestResults"></div>
+    </div>
+
+    <!-- Results Section -->
+    <div class="test-section">
+      <h2>📋 Test Results</h2>
+      <button class="test-button" onclick="clearResults()">
+        Clear Results
+      </button>
+      <div id="results"></div>
+    </div>
+
+    <script>
+      // Get the Apps Script URL from the main app
+      let SCRIPT_URL = "";
+
+      // Load the main app's script URL
+      fetch("./index.html")
+        .then((response) => response.text())
+        .then((html) => {
+          const match = html.match(/const SCRIPT_URL = ["']([^"']+)["']/);
+          if (match) {
+            SCRIPT_URL = match[1];
+            document.getElementById("currentUrl").textContent = SCRIPT_URL;
+            document.getElementById("testUrl").value = SCRIPT_URL;
+          } else {
+            log("❌ Could not find SCRIPT_URL in index.html", "error");
+          }
+        })
+        .catch((err) => {
+          log("❌ Error loading index.html: " + err.message, "error");
+        });
+
+      // Utility functions
+      function log(message, type = "info") {
+        const results = document.getElementById("results");
+        const timestamp = new Date().toLocaleTimeString();
+        const className =
+          type === "error" ? "error" : type === "success" ? "success" : "info";
+        results.innerHTML += `<div class="${className}">[${timestamp}] ${message}</div>`;
+        results.scrollTop = results.scrollHeight;
+        console.log(`[${timestamp}] ${message}`);
+      }
+
+      function clearResults() {
+        document.getElementById("results").innerHTML = "";
+      }
+
+      // Network status
+      function updateNetworkStatus() {
+        const indicator = document.getElementById("networkStatus");
+        const text = document.getElementById("networkText");
+        if (navigator.onLine) {
+          indicator.className = "status-indicator online";
+          text.textContent = "Online";
+        } else {
+          indicator.className = "status-indicator offline";
+          text.textContent = "Offline";
+        }
+      }
+
+      window.addEventListener("online", updateNetworkStatus);
+      window.addEventListener("offline", updateNetworkStatus);
+      updateNetworkStatus();
+
+      // Test Google Apps Script connection
+      async function testScriptConnection() {
+        const url = document.getElementById("testUrl").value.trim();
+        if (!url) {
+          log("❌ Please enter a Google Apps Script URL", "error");
+          return;
+        }
+
+        log("🔍 Testing connection to: " + url, "info");
+
+        try {
+          // Google Apps Script requires POST requests and has CORS restrictions
+          // We'll test with a simple ping action instead of GET
+          const form = new URLSearchParams({
+            action: "ping",
+            test: "connection",
+          });
+
+          const response = await fetch(url, {
+            method: "POST",
+            body: form,
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+          });
+
+          if (response.ok) {
+            const text = await response.text();
+            log("✅ Connection successful! Response received", "success");
+
+            // Try to parse as JSON
+            try {
+              const data = JSON.parse(text);
+              document.getElementById(
+                "connectionResults"
+              ).innerHTML = `<div class="success">✅ Apps Script is responding!</div>
+                   <pre style="background: #f8f9fa; padding: 10px; border-radius: 4px; overflow-x: auto;">${JSON.stringify(
+                     data,
+                     null,
+                     2
+                   )}</pre>`;
+            } catch (e) {
+              // Not JSON, show raw response
+              document.getElementById(
+                "connectionResults"
+              ).innerHTML = `<div class="success">✅ Apps Script is responding!</div>
+                   <pre style="background: #f8f9fa; padding: 10px; border-radius: 4px; overflow-x: auto;">${text.substring(
+                     0,
+                     500
+                   )}${text.length > 500 ? "..." : ""}</pre>`;
+            }
+          } else {
+            log(
+              `❌ Connection failed: ${response.status} ${response.statusText}`,
+              "error"
+            );
+            document.getElementById(
+              "connectionResults"
+            ).innerHTML = `<div class="error">❌ HTTP ${response.status}: ${response.statusText}</div>`;
+          }
+        } catch (error) {
+          log("❌ Connection error: " + error.message, "error");
+          document.getElementById(
+            "connectionResults"
+          ).innerHTML = `<div class="error">❌ Error: ${error.message}<br><br>
+               <strong>Common causes:</strong><br>
+               • Apps Script not deployed as Web App<br>
+               • Wrong deployment URL<br>
+               • Apps Script permissions not granted<br>
+               • Network/firewall issues</div>`;
+        }
+      }
+      async function testPing() {
+        const url = document.getElementById("testUrl").value.trim();
+        if (!url) {
+          log("❌ Please enter a Google Apps Script URL", "error");
+          return;
+        }
+
+        log("📡 Pinging Apps Script...", "info");
+
+        try {
+          const form = new URLSearchParams({
+            action: "ping",
+            timestamp: Date.now(),
+          });
+
+          const response = await fetch(url, {
+            method: "POST",
+            body: form,
+          });
+
+          const data = await response.json();
+          log("✅ Ping successful: " + JSON.stringify(data), "success");
+        } catch (error) {
+          log("❌ Ping failed: " + error.message, "error");
+        }
+      }
+
+      // Test local storage
+      function testLocalStorage() {
+        log("🧪 Testing localStorage...", "info");
+
+        try {
+          // Test write
+          localStorage.setItem(
+            "tasbih_test",
+            JSON.stringify({ test: "data", timestamp: Date.now() })
+          );
+          log("✅ localStorage write: OK", "success");
+
+          // Test read
+          const data = JSON.parse(localStorage.getItem("tasbih_test"));
+          log("✅ localStorage read: " + JSON.stringify(data), "success");
+
+          // Test existing data
+          const existingData = {
+            userId: localStorage.getItem("tasbih_userId"),
+            name: localStorage.getItem("tasbih_name"),
+            session: localStorage.getItem("tasbih_session"),
+            counts: localStorage.getItem("tasbih_counts"),
+          };
+
+          document.getElementById(
+            "storageResults"
+          ).innerHTML = `<h4>Existing Data:</h4><pre>${JSON.stringify(
+            existingData,
+            null,
+            2
+          )}</pre>`;
+        } catch (error) {
+          log("❌ localStorage error: " + error.message, "error");
+        }
+      }
+
+      function clearTestData() {
+        localStorage.removeItem("tasbih_test");
+        log("🗑️ Test data cleared", "info");
+      }
+
+      // Test API endpoints
+      async function testCreateUser() {
+        const url = document.getElementById("testUrl").value.trim();
+        const userId = document.getElementById("testUserId").value;
+        const userName = document.getElementById("testUserName").value;
+        const password = document.getElementById("testPassword").value;
+
+        if (!url || !userId || !userName || !password) {
+          log("❌ Please fill all fields", "error");
+          return;
+        }
+
+        log("👤 Testing user registration...", "info");
+
+        try {
+          const form = new URLSearchParams({
+            action: "createUser",
+            userId: userId,
+            name: userName,
+            password: password,
+          });
+
+          const response = await fetch(url, {
+            method: "POST",
+            body: form,
+          });
+
+          const data = await response.json();
+          log(
+            "📝 Register response: " + JSON.stringify(data),
+            data.success ? "success" : "error"
+          );
+        } catch (error) {
+          log("❌ Register error: " + error.message, "error");
+        }
+      }
+
+      async function testLogin() {
+        const url = document.getElementById("testUrl").value.trim();
+        const userId = document.getElementById("testUserId").value;
+        const password = document.getElementById("testPassword").value;
+
+        if (!url || !userId || !password) {
+          log("❌ Please enter URL, User ID and Password", "error");
+          return;
+        }
+
+        log("🔐 Testing login...", "info");
+
+        try {
+          const form = new URLSearchParams({
+            action: "login",
+            userId: userId,
+            password: password,
+          });
+
+          const response = await fetch(url, {
+            method: "POST",
+            body: form,
+          });
+
+          const data = await response.json();
+          log(
+            "🔓 Login response: " + JSON.stringify(data),
+            data.success ? "success" : "error"
+          );
+        } catch (error) {
+          log("❌ Login error: " + error.message, "error");
+        }
+      }
+
+      async function testSaveTasbih() {
+        const url = document.getElementById("testUrl").value.trim();
+        const userId = document.getElementById("testUserId").value;
+        const userName = document.getElementById("testUserName").value;
+        const testData = document.getElementById("testData").value;
+
+        if (!url || !userId || !testData) {
+          log("❌ Please enter URL, User ID and test data", "error");
+          return;
+        }
+
+        log("💾 Testing save tasbih...", "info");
+
+        try {
+          const form = new URLSearchParams({
+            action: "saveTasbih",
+            userId: userId,
+            name: userName,
+            data: testData,
+          });
+
+          const response = await fetch(url, {
+            method: "POST",
+            body: form,
+          });
+
+          const data = await response.json();
+          log(
+            "💾 Save response: " + JSON.stringify(data),
+            data.success ? "success" : "error"
+          );
+        } catch (error) {
+          log("❌ Save error: " + error.message, "error");
+        }
+      }
+
+      async function testGetProgress() {
+        const url = document.getElementById("testUrl").value.trim();
+        const userId = document.getElementById("testUserId").value;
+
+        if (!url || !userId) {
+          log("❌ Please enter URL and User ID", "error");
+          return;
+        }
+
+        log("📊 Testing get progress...", "info");
+
+        try {
+          const form = new URLSearchParams({
+            action: "getProgress",
+            userId: userId,
+          });
+
+          const response = await fetch(url, {
+            method: "POST",
+            body: form,
+          });
+
+          const data = await response.json();
+          log("📊 Progress response: " + JSON.stringify(data), "success");
+        } catch (error) {
+          log("❌ Progress error: " + error.message, "error");
+        }
+      }
+
+      // Test Google Sheets setup
+      async function testSheetsSetup() {
+        const url = document.getElementById("testUrl").value.trim();
+        if (!url) {
+          log("❌ Please enter a Google Apps Script URL", "error");
+          return;
+        }
+
+        log("📊 Testing Google Sheets setup...", "info");
+
+        // Test if sheets exist by trying to create a user
+        try {
+          const testUserId = "test_setup_" + Date.now();
+          const form = new URLSearchParams({
+            action: "createUser",
+            userId: testUserId,
+            name: "Setup Test User",
+            password: "testpass123",
+          });
+
+          const response = await fetch(url, {
+            method: "POST",
+            body: form,
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            log(
+              "✅ Sheets setup appears correct - user sheet accessible",
+              "success"
+            );
+
+            // Now test data sheet by trying to save
+            const saveForm = new URLSearchParams({
+              action: "saveTasbih",
+              userId: testUserId,
+              name: "Setup Test User",
+              data: JSON.stringify({
+                sessionId: "setup-test-" + Date.now(),
+                counts: { SetupTest: 1 },
+              }),
+            });
+
+            const saveResponse = await fetch(url, {
+              method: "POST",
+              body: saveForm,
+            });
+            const saveData = await saveResponse.json();
+
+            if (saveData.success) {
+              log("✅ Both sheets working correctly!", "success");
+              document.getElementById(
+                "sheetsResults"
+              ).innerHTML = `<div class="success">✅ Setup verification passed!<br>
+                             Both 'user' and 'tashbih_data' sheets are accessible.</div>`;
+            } else {
+              log("❌ Data sheet issue: " + saveData.message, "error");
+              document.getElementById(
+                "sheetsResults"
+              ).innerHTML = `<div class="error">❌ Data sheet error: ${saveData.message}<br>
+                             Make sure you have a 'tashbih_data' sheet with correct headers.</div>`;
+            }
+          } else if (data.message && data.message.includes("Required sheets")) {
+            log("❌ Missing required sheets: " + data.message, "error");
+            document.getElementById(
+              "sheetsResults"
+            ).innerHTML = `<div class="error">❌ ${data.message}<br>
+                         You need to create sheets named 'user' and 'tashbih_data' in your Google Sheet.</div>`;
+          } else {
+            log("⚠️ Sheets test result: " + data.message, "error");
+            document.getElementById(
+              "sheetsResults"
+            ).innerHTML = `<div class="error">⚠️ ${data.message}</div>`;
+          }
+        } catch (error) {
+          log("❌ Sheets setup test failed: " + error.message, "error");
+          document.getElementById(
+            "sheetsResults"
+          ).innerHTML = `<div class="error">❌ Connection error: ${error.message}<br>
+                     Make sure your Apps Script is deployed and accessible.</div>`;
+        }
+      }
+
+      function generateSheetTemplate() {
+        log("📋 Generating Google Sheets template...", "info");
+
+        const template = `
+Google Sheets Setup Template:
+
+1. CREATE TWO SHEETS IN YOUR GOOGLE SPREADSHEET:
+
+Sheet 1: "user"
+Headers (Row 1): UserID | Name | Password
+Example data:
+user123 | John Doe | mypassword
+user456 | Jane Smith | password123
+
+Sheet 2: "tashbih_data" 
+Headers (Row 1): Timestamp | UserID | Name | TasbihName | Count | SessionID
+Example data:
+2024-01-01 10:00:00 | user123 | John Doe | SubhanAllah | 33 | sess-12345
+2024-01-01 10:05:00 | user123 | John Doe | Alhamdulillah | 33 | sess-12345
+
+2. APPS SCRIPT SETUP:
+- Go to Extensions > Apps Script in your Google Sheet
+- Replace the default code with your provided Apps Script code
+- Save the project
+- Deploy as Web App (Execute as: Me, Access: Anyone with link)
+- Copy the deployment URL and paste it in your frontend
+
+3. AUTHORIZATION:
+- The first time you run the script, Google will ask for permissions
+- Allow access to Google Sheets when prompted
+- Test the script by running any function manually once
+
+4. COMMON ISSUES:
+- Make sure sheet names are exactly "user" and "tashbih_data" (case sensitive)
+- Ensure headers are in the correct order
+- Check that the Apps Script is deployed as a web app, not just saved
+- Verify the deployment URL is correct and accessible
+`;
+
+        document.getElementById(
+          "sheetsResults"
+        ).innerHTML = `<div style="background: #f8f9fa; padding: 15px; border-radius: 5px;">
+                 <h4>📋 Google Sheets Setup Template</h4>
+                 <pre style="white-space: pre-wrap; font-size: 12px;">${template}</pre>
+                 </div>`;
+
+        log(
+          "📋 Template generated - check the results section above",
+          "success"
+        );
+      }
+
+      // Diagnose specific sheets errors
+      async function diagnoseSheetsError() {
+        const url = document.getElementById("testUrl").value.trim();
+        if (!url) {
+          log("❌ Please enter a Google Apps Script URL", "error");
+          return;
+        }
+
+        log("🩺 Diagnosing Google Sheets setup...", "info");
+
+        // Test 1: Basic connectivity
+        try {
+          const pingForm = new URLSearchParams({ action: "ping" });
+          const pingResponse = await fetch(url, {
+            method: "POST",
+            body: pingForm,
+          });
+          const pingData = await pingResponse.json();
+
+          if (pingData.success) {
+            log("✅ Apps Script is reachable", "success");
+          } else {
+            log("❌ Apps Script ping failed: " + pingData.message, "error");
+            return;
+          }
+        } catch (error) {
+          log("❌ Cannot reach Apps Script: " + error.message, "error");
+          return;
+        }
+
+        // Test 2: Try to create a user to test "user" sheet
+        try {
+          const testUserId = "diagnostic_" + Date.now();
+          const userForm = new URLSearchParams({
+            action: "createUser",
+            userId: testUserId,
+            name: "Diagnostic Test",
+            password: "test123",
+          });
+
+          const userResponse = await fetch(url, {
+            method: "POST",
+            body: userForm,
+          });
+          const userData = await userResponse.json();
+
+          if (userData.success) {
+            log('✅ "user" sheet is accessible', "success");
+          } else if (
+            userData.message &&
+            userData.message.includes("Required sheets")
+          ) {
+            // Parse which sheets are missing
+            if (userData.missingSheets) {
+              let missing = [];
+              if (userData.missingSheets.user) missing.push('"user"');
+              if (userData.missingSheets.tashbih_data)
+                missing.push('"tashbih_data"');
+
+              log("❌ Missing sheets: " + missing.join(", "), "error");
+              document.getElementById(
+                "sheetsResults"
+              ).innerHTML = `<div class="error">
+                           <h4>🚨 MISSING SHEETS DETECTED:</h4>
+                           <p>Your Google Spreadsheet is missing these required sheets:</p>
+                           <ul>${missing
+                             .map(
+                               (s) =>
+                                 `<li>Sheet named ${s} (lowercase, exact spelling)</li>`
+                             )
+                             .join("")}</ul>
+                           <p><strong>Solution:</strong></p>
+                           <ol>
+                             <li>Open your Google Spreadsheet</li>
+                             <li>Create/rename sheets to have these exact names: <code>user</code> and <code>tashbih_data</code></li>
+                             <li>Add the proper headers as shown in the setup guide</li>
+                             <li>Re-test the connection</li>
+                           </ol>
+                           </div>`;
+              return;
+            } else {
+              log("❌ Sheet error: " + userData.message, "error");
+            }
+          } else {
+            log("⚠️ User sheet test: " + userData.message, "error");
+          }
+        } catch (error) {
+          log("❌ User sheet test failed: " + error.message, "error");
+        }
+
+        // Test 3: Try to save data to test "tashbih_data" sheet
+        try {
+          const saveForm = new URLSearchParams({
+            action: "saveTasbih",
+            userId: "diagnostic_user",
+            name: "Diagnostic Test",
+            data: JSON.stringify({
+              sessionId: "diagnostic-session",
+              counts: { DiagnosticTest: 1 },
+            }),
+          });
+
+          const saveResponse = await fetch(url, {
+            method: "POST",
+            body: saveForm,
+          });
+          const saveData = await saveResponse.json();
+
+          if (saveData.success) {
+            log('✅ "tashbih_data" sheet is accessible', "success");
+            document.getElementById(
+              "sheetsResults"
+            ).innerHTML = `<div class="success">
+                       ✅ All sheets are working correctly!<br>
+                       Your Google Sheets setup appears to be properly configured.
+                       </div>`;
+          } else {
+            log("❌ Data sheet error: " + saveData.message, "error");
+            if (saveData.message && saveData.message.includes("appendRow")) {
+              document.getElementById(
+                "sheetsResults"
+              ).innerHTML = `<div class="error">
+                           <h4>🚨 FOUND THE PROBLEM:</h4>
+                           <p>The "tashbih_data" sheet is missing or has incorrect structure.</p>
+                           <p><strong>Error:</strong> ${saveData.message}</p>
+                           <p><strong>Solution:</strong></p>
+                           <ol>
+                             <li>Create a sheet named exactly <code>tashbih_data</code> (lowercase)</li>
+                             <li>Add headers: Timestamp | UserID | Name | TasbihName | Count | SessionID</li>
+                             <li>Make sure headers are in row 1</li>
+                             <li>Re-deploy your Apps Script</li>
+                           </ol>
+                           </div>`;
+            }
+          }
+        } catch (error) {
+          log("❌ Data sheet test failed: " + error.message, "error");
+        }
+      }
+
+      // Test Service Worker
+      async function testServiceWorker() {
+        log("⚙️ Testing Service Worker...", "info");
+
+        if ("serviceWorker" in navigator) {
+          try {
+            const registration = await navigator.serviceWorker.register(
+              "./service-worker.js"
+            );
+            log("✅ Service Worker registered successfully", "success");
+
+            const swStatus = registration.active
+              ? "Active"
+              : registration.waiting
+              ? "Waiting"
+              : registration.installing
+              ? "Installing"
+              : "Unknown";
+
+            document.getElementById(
+              "swResults"
+            ).innerHTML = `<div class="success">Status: ${swStatus}</div>
+                         <div>Scope: ${registration.scope}</div>`;
+          } catch (error) {
+            log(
+              "❌ Service Worker registration failed: " + error.message,
+              "error"
+            );
+            document.getElementById(
+              "swResults"
+            ).innerHTML = `<div class="error">Error: ${error.message}</div>`;
+          }
+        } else {
+          log("❌ Service Worker not supported", "error");
+        }
+      }
+
+      // Test Manifest
+      async function testManifest() {
+        log("📱 Testing PWA Manifest...", "info");
+
+        try {
+          const response = await fetch("./manifest.json");
+          if (response.ok) {
+            const manifest = await response.json();
+            log("✅ Manifest loaded successfully", "success");
+            document.getElementById(
+              "manifestResults"
+            ).innerHTML = `<pre style="background: #f8f9fa; padding: 10px; border-radius: 4px;">${JSON.stringify(
+              manifest,
+              null,
+              2
+            )}</pre>`;
+          } else {
+            log("❌ Manifest load failed: " + response.status, "error");
+          }
+        } catch (error) {
+          log("❌ Manifest error: " + error.message, "error");
+        }
+      }
+
+      // Initialize
+      document.addEventListener("DOMContentLoaded", function () {
+        log("🚀 Test suite initialized", "success");
+        log(
+          "ℹ️ Make sure you're running this on http://localhost:8000",
+          "info"
+        );
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,323 @@
+<html lang="en">
+    <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width,initial-scale=1" />
+      <title>📿 Tasbih Counter - Digital Islamic Prayer Beads</title>
+      <meta name="description" content="A beautiful, modern digital tasbih counter for Muslims. Track your dhikr and spiritual journey with cloud sync and offline support.">
+      <link rel="manifest" href="manifest.json">
+      <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+      <!-- Skip Link for Accessibility -->
+      <a href="#main-content" class="skip-link">Skip to main content</a>
+      <!-- Enhanced PWA Install Banner -->
+      <div id="installBanner" class="install-banner">
+        <div class="install-banner-content">
+          <div class="install-banner-icon">📱</div>
+          <div class="install-banner-text-section">
+            <div class="install-banner-title">
+              � Install Tasbih Counter
+            </div>
+            <div class="install-banner-subtitle">
+              Get the full app experience with offline access and quick actions
+            </div>
+            <div class="install-banner-features">
+              <span class="install-banner-feature">⚡ Offline Access</span>
+              <span class="install-banner-feature">🚀 Quick Actions</span>
+              <span class="install-banner-feature">🔄 Auto Sync</span>
+            </div>
+          </div>
+          <div class="install-banner-buttons">
+            <button id="installBtn" class="install-btn">Install App</button>
+            <button id="dismissInstallBtn" class="install-btn secondary">Maybe Later</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alternative Install Modal -->
+      <div id="installModal" class="install-modal-overlay">
+        <div class="install-modal">
+          <div class="install-modal-icon">📿</div>
+          <h2 class="install-modal-title">Welcome to Tasbih Counter</h2>
+          <p class="install-modal-subtitle">
+            Install our app for the best experience tracking your spiritual journey
+          </p>
+          <div class="install-modal-features">
+            <div class="install-modal-feature">📱 Native App Experience</div>
+            <div class="install-modal-feature">⚡ Works Offline</div>
+            <div class="install-modal-feature">🚀 Quick Access Shortcuts</div>
+            <div class="install-modal-feature">🔄 Automatic Sync</div>
+            <div class="install-modal-feature">🔔 Smart Notifications</div>
+            <div class="install-modal-feature">✨ Beautiful Design</div>
+          </div>
+          <div class="install-modal-buttons">
+            <button id="modalInstallBtn" class="install-btn">Install Now</button>
+            <button id="modalDismissBtn" class="install-btn secondary">Continue in Browser</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Onboarding Flow -->
+      <div id="onboardingOverlay" class="onboarding-overlay">
+        <div class="onboarding-modal">
+          <div id="onboardingStep1" class="onboarding-step active">
+            <div class="onboarding-icon">🙏</div>
+            <h3 class="onboarding-title">Welcome to Tasbih Counter</h3>
+            <p class="onboarding-description">
+              Your beautiful companion for dhikr and spiritual reflection. Let's get you started with a quick tour.
+            </p>
+            <div class="onboarding-buttons">
+              <button id="onboardingSkip" class="install-btn secondary">Skip Tour</button>
+              <button id="onboardingNext1" class="install-btn">Let's Begin</button>
+            </div>
+          </div>
+
+          <div id="onboardingStep2" class="onboarding-step">
+            <div class="onboarding-icon">📱</div>
+            <h3 class="onboarding-title">Install for Best Experience</h3>
+            <p class="onboarding-description">
+              Install our app to access offline features, quick actions, and automatic sync across your devices.
+            </p>
+            <div class="onboarding-buttons">
+              <button id="onboardingBack1" class="install-btn secondary">Back</button>
+              <button id="onboardingNext2" class="install-btn">Install App</button>
+            </div>
+          </div>
+
+          <div id="onboardingStep3" class="onboarding-step">
+            <div class="onboarding-icon">📿</div>
+            <h3 class="onboarding-title">Start Your Dhikr</h3>
+            <p class="onboarding-description">
+              Create an account or login to start tracking your tasbihs. Your progress syncs automatically.
+            </p>
+            <div class="onboarding-buttons">
+              <button id="onboardingBack2" class="install-btn secondary">Back</button>
+              <button id="onboardingFinish" class="install-btn">Get Started</button>
+            </div>
+          </div>
+
+          <div class="onboarding-dots">
+            <div class="onboarding-dot active"></div>
+            <div class="onboarding-dot"></div>
+            <div class="onboarding-dot"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Confirmation Dialog -->
+      <div id="confirmationOverlay" class="confirmation-overlay">
+        <div class="confirmation-dialog">
+          <div id="confirmationIcon" class="confirmation-icon">⚠️</div>
+          <h3 id="confirmationTitle" class="confirmation-title">Confirm Action</h3>
+          <p id="confirmationMessage" class="confirmation-message">Are you sure you want to proceed?</p>
+          <div class="confirmation-buttons">
+            <button id="confirmationCancel" class="install-btn secondary">Cancel</button>
+            <button id="confirmationConfirm" class="install-btn">Confirm</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Feedback Element -->
+      <div id="mobileFeedback" class="mobile-feedback">✨</div>
+
+      <!-- Swipe Indicator -->
+      <div class="swipe-indicator">👆 Swipe down to refresh</div>
+
+      <div class="wrap">
+        <!-- Beautiful Header -->
+        <div class="card" style="text-align: center; margin-bottom: 24px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(240, 253, 244, 0.9));">
+          <h1 style="font-size: 32px; margin-bottom: 8px;">📿 Tasbih Counter</h1>
+          <p style="color: var(--muted); font-size: 16px; margin: 0;">
+            A beautiful digital companion for your spiritual journey
+          </p>
+          <div style="margin-top: 12px; opacity: 0.6;">
+            ﷽
+          </div>
+        </div>
+
+        <div id="netStatus" class="status card small"></div>
+
+        <!-- Login Page -->
+        <div id="loginCard" class="card">
+          <div class="text-center mb-16">
+            <h1>🌙 Welcome Back</h1>
+            <p class="small">
+              Continue your spiritual journey. Login to sync your tasbihs across devices.
+            </p>
+          </div>
+
+          <input id="loginUserId" type="text" placeholder="👤 User ID" />
+          <div class="password-field">
+            <input id="loginPassword" type="password" placeholder="🔒 Password" aria-label="Password" />
+            <button type="button" class="password-toggle" data-target="loginPassword" aria-label="Show password" data-state="hidden">
+              <svg class="icon-eye" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg class="icon-eye-off" style="display:none;" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.77 21.77 0 0 1 5.06-6.94m4.34-2.01A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a21.83 21.83 0 0 1-2.16 3.19M9.9 9.9a2.5 2.5 0 0 0 3.53 3.53M1 1l22 22"/></svg>
+            </button>
+          </div>
+
+          <div class="controls">
+            <button class="btn" onclick="login()">🚀 Login</button>
+          </div>
+
+          <div class="text-center mt-16">
+            <p class="small muted">
+              New to Tasbih Counter?
+              <a href="#" onclick="showRegister()" class="auth-link">Create Account</a>
+            </p>
+          </div>
+
+          <p id="loginMsg" class="small"></p>
+        </div>
+
+        <!-- Register Page -->
+        <div id="registerCard" class="card" style="display: none">
+          <div class="text-center mb-16">
+            <h1>✨ Create Account</h1>
+            <p class="small">
+              Join our spiritual community. Register to sync your tasbihs with cloud storage.
+            </p>
+          </div>
+
+          <input
+            id="registerUserId"
+            type="text"
+            placeholder="🆔 Auto-generated User ID (editable)"
+          />
+          <p class="small muted" style="margin-top: -8px; margin-bottom: 8px">
+            💡 Auto-generated unique ID - you can edit it if preferred
+          </p>
+          <input id="registerName" type="text" placeholder="👤 Your Full Name" />
+          <div class="password-field">
+            <input
+              id="registerPassword"
+              type="password"
+              placeholder="🔐 Choose Password"
+              aria-label="Choose Password"
+            />
+            <button type="button" class="password-toggle" data-target="registerPassword" aria-label="Show password" data-state="hidden">
+              <svg class="icon-eye" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg class="icon-eye-off" style="display:none;" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.77 21.77 0 0 1 5.06-6.94m4.34-2.01A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a21.83 21.83 0 0 1-2.16 3.19M9.9 9.9a2.5 2.5 0 0 0 3.53 3.53M1 1l22 22"/></svg>
+            </button>
+          </div>
+
+          <div class="controls">
+            <button
+              class="btn"
+              onclick="createUser()"
+              style="background: linear-gradient(135deg, #16a34a, #22c55e)"
+            >
+              🎯 Create Account
+            </button>
+          </div>
+
+          <div class="text-center mt-16">
+            <p class="small muted">
+              Already have an account?
+              <a href="#" onclick="showLogin()" class="auth-link">Login here</a>
+            </p>
+          </div>
+
+          <p id="registerMsg" class="small"></p>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboard" class="card" style="display: none">
+          <div class="flex-between mb-16">
+            <div>
+              <h2>🌟 Welcome, <span id="displayName"></span></h2>
+              <p class="small muted">May your tasbihs bring you peace and blessings</p>
+            </div>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <button id="headerInstallBtn" class="btn-ghost" style="display:none; font-size:14px; padding:10px 14px;">📱 Install</button>
+              <button
+                class="btn"
+                onclick="logout()"
+                style="background: linear-gradient(135deg, #dc2626, #ef4444); padding: 10px 16px; font-size: 14px"
+              >
+                🚪 Logout
+              </button>
+            </div>
+          </div>
+
+          <h3>➕ Add New Tasbih</h3>
+          <input id="newTasbih" type="text" placeholder="📿 e.g., SubhanAllah, Alhamdulillah, Allahu Akbar" />
+          <div class="controls">
+            <button class="btn" onclick="addTasbih()">✨ Add Tasbih</button>
+            <button class="btn" onclick="clearLocal()" style="background: linear-gradient(135deg, #f59e0b, #fbbf24)">🗑️ Clear Local</button>
+          </div>
+
+          <div id="tasbihList" style="margin-top: 20px"></div>
+
+          <div style="margin-top: 20px" class="controls">
+            <button class="btn" onclick="saveProgress()">💾 Save & Sync</button>
+            <button class="btn btn-secondary" onclick="loadProgress()" style="background: var(--surface-tinted); color: var(--primary-dark);">📊 Load Today's Progress</button>
+          </div>
+
+          <!-- Inline install hint -->
+          <div id="inlineInstallHint" class="install-inline-hint" style="display:none;">
+            <div class="hint-icon">📱</div>
+            <div class="hint-text">
+              <strong>Install the App</strong>
+              <div class="small" style="margin-top:4px;">Add Tasbih Counter to your home screen for offline access & quick actions.</div>
+            </div>
+            <div class="hint-actions">
+              <button id="inlineInstallBtn" class="btn-accent" style="padding:8px 14px; font-size:13px;">Install</button>
+              <button id="inlineDismissBtn" class="btn-ghost" style="font-size:13px;">Later</button>
+            </div>
+          </div>
+
+          <div id="progress" style="margin-top: 12px" class="small muted"></div>
+          <!-- Analytics / Charts -->
+          <div id="chartsCard" class="charts-card" style="display:none;">
+            <div class="flex-between" style="align-items:center; margin-bottom:8px;">
+              <h3 style="margin:0;">📈 Dhikr Analytics <span class="accent-badge">Beta</span></h3>
+              <div class="chart-tabs" role="tablist" aria-label="Dhikr ranges">
+                <button class="chart-tab active" data-range="day" role="tab" aria-selected="true">Day</button>
+                <button class="chart-tab" data-range="month" role="tab" aria-selected="false">Month</button>
+                <button class="chart-tab" data-range="year" role="tab" aria-selected="false">Year</button>
+              </div>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="dhikrChart" height="240" aria-label="Dhikr activity chart" role="img"></canvas>
+              <div id="chartEmpty" class="chart-empty">No activity yet. Start counting to see insights.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card small muted">
+          <strong>Notes:</strong>
+          <ul>
+            <li>
+              Offline counts saved in <code>localStorage</code> and auto-sync
+              when online.
+            </li>
+            <li id="manualInstallInstructions" style="display:none;">On iOS Safari: Tap <strong>Share</strong> → <strong>Add to Home Screen</strong> to install.</li>
+          </ul>
+        </div>
+      </div>
+
+        <!-- Floating Install Chip -->
+        <button id="installFab" class="install-fab" style="display:none;" aria-label="Install Tasbih Counter">📱 Install</button>
+
+      <!-- Custom Popup -->
+      <div id="customPopup" class="popup-overlay">
+        <div class="popup-content">
+          <div class="popup-title" id="popupTitle">Notification</div>
+          <div class="popup-message" id="popupMessage">Message here</div>
+          <div class="popup-buttons">
+            <button class="popup-btn primary" id="popupPrimaryBtn">OK</button>
+            <button
+              class="popup-btn secondary"
+              id="popupSecondaryBtn"
+              style="display: none"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+      <script src="script.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-eIY0HjABlZ0N2VNivX8XcX4Jt9V7H1IOqRr2YUhtqof5cHIxGcQfBm8X8Xn9GZ7P" crossorigin="anonymous"></script>
+    </body>
+  </html>
+</html>

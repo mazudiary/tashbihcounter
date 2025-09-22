@@ -1,0 +1,98 @@
+📊 GOOGLE SHEETS SETUP GUIDE FOR TASBIH COUNTER
+=================================================
+
+🚨 ERROR: "Cannot read properties of null (reading 'appendRow')"
+This error means your Google Sheets are missing the required sheets.
+
+📋 STEP-BY-STEP SETUP:
+
+1. 📄 CREATE/OPEN YOUR GOOGLE SPREADSHEET
+   - Go to https://sheets.google.com
+   - Create a new spreadsheet OR open your existing one
+   - Give it a name like "Tasbih Tracker Data"
+
+2. 🏗️ CREATE THE REQUIRED SHEETS
+   
+   SHEET 1: "user" (exact name, lowercase)
+   ========================================
+   - Right-click on "Sheet1" tab → Rename to "user"
+   - In Row 1, add these headers EXACTLY:
+     A1: UserID
+     B1: Name  
+     C1: Password
+   
+   SHEET 2: "tashbih_data" (exact name, lowercase)
+   ===============================================
+   - Click the "+" tab to add a new sheet
+   - Rename it to "tashbih_data"
+   - In Row 1, add these headers EXACTLY:
+     A1: Timestamp
+     B1: UserID
+     C1: Name
+     D1: TasbihName
+     E1: Count
+     F1: SessionID
+
+3. 🔧 CONNECT TO APPS SCRIPT
+   - In your Google Sheet, go to Extensions → Apps Script
+   - Replace the default code with your updated Apps Script code
+   - Save the project (Ctrl+S)
+
+4. 🚀 DEPLOY AS WEB APP
+   - Click "Deploy" → "New deployment"
+   - Type: Web app
+   - Description: "Tasbih Counter API"
+   - Execute as: Me (your email)
+   - Who has access: Anyone
+   - Click "Deploy"
+   - Copy the Web app URL
+
+5. ✅ TEST AUTHORIZATION
+   - In Apps Script editor, manually run any function once
+   - Google will ask for permissions - click "Allow"
+   - This authorizes the script to access your sheets
+
+6. 🔄 UPDATE YOUR FRONTEND
+   - Replace the SCRIPT_URL in your index.html with the new deployment URL
+
+📝 EXAMPLE SHEET STRUCTURE:
+
+Sheet: "user"
++----------+----------+----------+
+| UserID   | Name     | Password |
++----------+----------+----------+
+| user123  | John Doe | mypass   |
+| user456  | Jane     | secret   |
++----------+----------+----------+
+
+Sheet: "tashbih_data" 
++-------------------+--------+-------+-------------+-------+-----------+
+| Timestamp         | UserID | Name  | TasbihName  | Count | SessionID |
++-------------------+--------+-------+-------------+-------+-----------+
+| 2024-01-01 10:00  | user123| John  | SubhanAllah | 33    | sess-123  |
+| 2024-01-01 10:05  | user123| John  | Alhamdulill | 33    | sess-123  |
++-------------------+--------+-------+-------------+-------+-----------+
+
+🔍 COMMON MISTAKES:
+❌ Sheet names with capital letters (must be lowercase)
+❌ Missing sheets (both "user" and "tashbih_data" required)
+❌ Wrong headers or header order
+❌ Not deploying after code changes
+❌ Not authorizing Google Sheets access
+❌ Using old deployment URL
+
+✅ VERIFICATION CHECKLIST:
+□ Google Sheet has sheet named "user" (lowercase)
+□ Google Sheet has sheet named "tashbih_data" (lowercase)  
+□ Headers are in the correct order and spelling
+□ Apps Script code is saved and deployed as Web App
+□ Authorization granted when prompted
+□ New deployment URL copied to index.html
+□ Test the connection using the test suite
+
+🧪 HOW TO TEST:
+1. Open http://localhost:8000/test.html
+2. Click "🔍 Test Sheets Setup"
+3. Should show "✅ Setup verification passed!"
+
+If you're still getting errors, the test will tell you exactly which sheet is missing.

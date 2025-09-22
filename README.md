@@ -255,11 +255,19 @@ Feel free to open issues for feature discussions first.
 
 ## 🧾 License
 
-Choose a license (e.g. MIT) and place it here. If unsure, MIT is a permissive default:
+This project’s source code is released under the MIT License – see [`LICENSE`](./LICENSE).
 
-```
-MIT License © 2025 Your Name
-```
+Brand / visual assets (icons, splash illustrations, background patterns, emblem) are governed separately – see [`ASSETS-LICENSE.md`](./ASSETS-LICENSE.md).
+
+### Summary
+
+- Code: MIT (permissive – use, modify, redistribute with attribution notice retained)
+- Brand Assets: Restricted (no reuse outside this app without permission)
+- Third‑Party Library: Chart.js (MIT)
+
+If you contribute, you agree your contributions are licensed under the project’s MIT terms.
+
+> Former placeholder text replaced. Choose a proper copyright holder name in `LICENSE` & `ASSETS-LICENSE.md`.
 
 ---
 
