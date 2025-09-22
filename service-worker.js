@@ -3,17 +3,17 @@ const STATIC_CACHE = "tasbih-static-v2";
 const DYNAMIC_CACHE = "tasbih-dynamic-v2";
 const API_CACHE = "tasbih-api-v2";
 
+// For GitHub Pages subpath hosting (e.g., /tashbihcounter/), avoid leading slashes.
 const STATIC_FILES = [
-  "/",
-  "/index.html",
-  "/manifest.json",
-  "/service-worker.js",
-  "/icon-192.svg",
-  "/icon-512.svg",
-  "/icon-72.svg",
-  "/icon-96.svg",
-  "/icon-128.svg",
-  "/icon-144.svg",
+  "index.html",
+  "manifest.json",
+  "service-worker.js",
+  "icon-192.svg",
+  "icon-512.svg",
+  "icon-72.svg",
+  "icon-96.svg",
+  "icon-128.svg",
+  "icon-144.svg",
 ];
 
 const API_ENDPOINTS = ["script.google.com"];
@@ -87,7 +87,12 @@ self.addEventListener("fetch", (evt) => {
   }
 
   // Handle static assets
-  if (STATIC_FILES.some((file) => url.pathname === file)) {
+  // Normalize pathname for subdirectory hosting by trimming leading slash
+  const normalizedPath = url.pathname.startsWith("/")
+    ? url.pathname.slice(1)
+    : url.pathname;
+
+  if (STATIC_FILES.includes(normalizedPath)) {
     evt.respondWith(
       caches.match(evt.request).then((response) => {
         return response || fetch(evt.request);
@@ -112,7 +117,7 @@ self.addEventListener("fetch", (evt) => {
       .catch(() => {
         // Return cached version or fallback to index.html for navigation
         return caches.match(evt.request).then((response) => {
-          return response || caches.match("/index.html");
+          return response || caches.match("index.html");
         });
       })
   );
